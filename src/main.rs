@@ -12,6 +12,26 @@ pub struct Config {
 }
 
 impl Config {
+    /// Builds a `Config` from an iterator of command-line arguments.
+    ///
+    /// The first item is skipped, as it is expected to be the program name.
+    /// The next two items are used as the search query and the file path.
+    /// Case-insensitive search is enabled when the `IGNORE_CASE`
+    /// environment variable is set, regardless of its value.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the query or the file path is missing.
+    ///
+    /// # Examples
+    ///
+    /// ```ignore
+    /// let args = ["minigrep", "to", "poem.txt"].map(String::from);
+    /// let config = Config::build(args.into_iter()).unwrap();
+    ///
+    /// assert_eq!(config.query, "to");
+    /// assert_eq!(config.file_path, "poem.txt");
+    /// ```
     fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
         args.next();
 
